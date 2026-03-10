@@ -2,11 +2,8 @@
 using APIMMA.Dtos;
 using APIMMA.Exceptions;
 using APIMMA.Models;
-using APIMMA.Validations;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace APIMMA.Services
 {
@@ -22,7 +19,6 @@ namespace APIMMA.Services
             _validator = validator;
             _jwtService = jwtService;
         }
-
 
         public async Task<JwtDto> Login (LoginUserDto userDto)
         {

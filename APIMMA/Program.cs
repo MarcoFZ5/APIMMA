@@ -25,24 +25,10 @@ builder.Services.AddAuthentication().AddJwtBearer("Bearer", auth => {
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        
+
         ValidIssuer = "APIMMA",
         ValidAudience = "FRONTAPP",
         IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(_secretKey))
-    };
-    auth.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine(context.Exception);
-            return Task.CompletedTask;
-        },
-        OnTokenValidated = context =>
-               {
-                   Console.WriteLine("Token Validado");
-                   return Task.CompletedTask;
-               }
-
     };
     }
 );
@@ -57,7 +43,8 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Add Validators to the container.
-builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+//builder.Services.AddScoped(typeof(ValidationFilter<>)); FOR FUTURE TO DO
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
