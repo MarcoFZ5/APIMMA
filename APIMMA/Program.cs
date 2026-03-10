@@ -41,6 +41,7 @@ builder.Services.AddProblemDetails();
 // Add services to the container.
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Add Validators to the container.
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
