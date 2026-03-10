@@ -1,0 +1,6 @@
+@APIMMA_HostAddress = http://localhost:5096
+
+GET {{APIMMA_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
