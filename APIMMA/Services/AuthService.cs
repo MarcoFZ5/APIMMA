@@ -10,13 +10,11 @@ namespace APIMMA.Services
     public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
-        private readonly IValidator<RegisterUserDto> _validator;
         private readonly IJwtService _jwtService;
 
         public AuthService(AppDbContext context, IValidator<RegisterUserDto> validator, IJwtService jwtService)
         {
             _context = context;
-            _validator = validator;
             _jwtService = jwtService;
         }
 
@@ -40,8 +38,6 @@ namespace APIMMA.Services
 
         public async Task<string> Register(RegisterUserDto userDto)
         {
-            await _validator.ValidateAndThrowAsync(userDto);
-
             var user = _context.Users.AnyAsync(user => user.Email == userDto.Email).Result;
 
             if (user)
