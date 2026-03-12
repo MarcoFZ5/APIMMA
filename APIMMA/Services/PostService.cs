@@ -24,17 +24,18 @@ namespace APIMMA.Services
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(post => new PostDto
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Content = post.Content,
-                Created_at = post.Created_at,
-                user = 
                 {
-                    name = post.User.Name,
-                    nickname = post.User.Nickname ?? "N/A"
-                }
-            }).ToListAsync();
+                    Id = post.Id,
+                    Title = post.Title,
+                    Content = post.Content,
+                    Created_at = post.Created_at,
+                    user = new UserDto
+                    {
+                        name = post.User.Name,
+                        nickname = post.User.Nickname ?? "N/A",
+                        role = post.User.Role,
+                    }
+                }).ToListAsync();
 
             return posts;
         }
@@ -59,5 +60,25 @@ namespace APIMMA.Services
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
         }
+
+        public async Task EditPost(int postId, int userId, PatchPostDto postDto)
+        {
+            var post = await _context.Posts.FindAsync(postId);
+            if (post == null)
+            {
+                throw new PostNotFoundException(postId);
+            }
+            if (post.User_id != userId)
+            {
+                throw new UnauthorizedAccessException("You are not authorized to edit this post.");
+            }
+
+            post.Title = postDto.Title ?? post.Title;
+            post.Content = postDto.Content ?? post.Content;
+
+            await _context.SaveChangesAsync();
+        }
+
+
     }
 }
