@@ -1,4 +1,5 @@
 ﻿using APIMMA.Data;
+using APIMMA.Dtos;
 using APIMMA.Dtos.PostDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
@@ -29,7 +30,7 @@ namespace APIMMA.Services
                     Title = post.Title,
                     Content = post.Content,
                     Created_at = post.Created_at,
-                    user = new UserDto
+                    User = new UserDto
                     {
                         name = post.User.Name,
                         nickname = post.User.Nickname ?? "N/A",
@@ -64,6 +65,61 @@ namespace APIMMA.Services
                 }).ToListAsync();
 
             return posts;
+        }
+
+        public async Task<PostDto> GetPostById(int postId)
+        {
+            var post = await _context.Posts
+                .AsNoTracking()
+                .Where(p => p.Id == postId)
+                .Select(p => new PostDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    Created_at = p.Created_at,
+                    User = new UserDto
+                    {
+                        name = p.User.Name,
+                        nickname = p.User.Nickname ?? "N/A",
+                        role = p.User.Role,
+                    }
+                }).FirstOrDefaultAsync() 
+                ?? throw new PostNotFoundException(postId);
+
+            return post;
+        }
+
+        public async Task<List<CommentDto>> GetCommentsByPostId(int postId, int page, int pageSize)
+        {
+
+            var exists = await _context.Posts.AnyAsync(post => post.Id == postId);
+                
+            if (!exists)
+            {
+               throw new PostNotFoundException(postId);
+            }
+
+            var comments = await _context.Comments
+                .AsNoTracking()
+                .Where(comment => comment.Post_id == postId)
+                .OrderByDescending(comment => comment.Created_at)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(comment => new CommentDto
+                {
+                    Id = comment.Id,
+                    Content = comment.Content,
+                    Created_at = comment.Created_at,
+                    User = new UserDto
+                    {
+                        name = comment.User.Name,
+                        nickname = comment.User.Nickname ?? "N/A",
+                        role = comment.User.Role,
+                    }
+                }).ToListAsync();
+
+            return comments;
         }
 
         public async Task Post(int UserId, CreatePostDto postDto)

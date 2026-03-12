@@ -1,4 +1,5 @@
-﻿using APIMMA.Dtos.PostDtos;
+﻿using APIMMA.Dtos;
+using APIMMA.Dtos.PostDtos;
 
 namespace APIMMA.Services
 {
@@ -11,5 +12,9 @@ namespace APIMMA.Services
         public Task Post(int UserId, CreatePostDto postDto);
 
         public Task EditPost(int postId, int userId, PatchPostDto postDto);
+
+        public Task<PostDto> GetPostById(int postId);
+
+        public Task<List<CommentDto>> GetCommentsByPostId(int postId, int page, int pageSize);
     }
 }

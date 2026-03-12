@@ -1,4 +1,5 @@
-﻿using APIMMA.Dtos.PostDtos;
+﻿using APIMMA.Dtos;
+using APIMMA.Dtos.PostDtos;
 using APIMMA.Extensions;
 using APIMMA.Services;
 using FluentValidation;
@@ -36,6 +37,20 @@ namespace APIMMA.Controllers
         {
             var posts = await _postService.GetPostsByUser(userId, page, pageSize);
             return Ok(posts);
+        }
+
+        [HttpGet("{postId}")]
+        public async Task<ActionResult<PostDto>> GetPostById(int postId)
+        {
+            var post = await _postService.GetPostById(postId);
+            return Ok(post);
+        }
+
+        [HttpGet("{postId}/comments")]
+        public async Task<ActionResult<List<CommentDto>>> GetCommentsForPost(int postId, int page, int pageSize)
+        {
+            var comments = await _postService.GetCommentsByPostId(postId, page, pageSize);
+            return Ok(comments);
         }
 
         [HttpPost]

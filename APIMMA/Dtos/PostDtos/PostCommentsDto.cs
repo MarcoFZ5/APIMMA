@@ -1,18 +1,13 @@
-﻿using APIMMA.Dtos.UserDtos;
-
-namespace APIMMA.Dtos.PostDtos
+﻿namespace APIMMA.Dtos.PostDtos
 {
-    public class PostDto
+    public class PostCommentsDto
     {
         public int Id { get; set; }
-
         public string Title { get; set; }
-
         public string Content { get; set; }
 
         public DateTime Created_at { get; set; }
 
-        public UserDto? User { get; set; }
-
+        public List<CommentDto>? Comments { get; set; }
     }
 }
