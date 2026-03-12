@@ -1,4 +1,5 @@
-﻿using APIMMA.Dtos;
+﻿using APIMMA.Dtos.AuthDtos;
+using APIMMA.Dtos.UserDtos;
 
 namespace APIMMA.Services
 {

@@ -1,4 +1,4 @@
-﻿namespace APIMMA.Dtos
+﻿namespace APIMMA.Dtos.AuthDtos
 {
     public class LoginUserDto
     {

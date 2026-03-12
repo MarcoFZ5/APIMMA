@@ -1,4 +1,4 @@
-﻿using APIMMA.Dtos;
+﻿using APIMMA.Dtos.AuthDtos;
 using FluentValidation;
 using System.Data;
 

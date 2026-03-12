@@ -1,5 +1,5 @@
 ﻿using APIMMA.Data;
-using APIMMA.Dtos;
+using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +31,23 @@ namespace APIMMA.Services
                 email = user.Email,
                 role = user.Role
             };
+        }
+
+        public async Task updateProfile(int userId, UpdateProfileDto userUpdateDto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+
+            if (userUpdateDto.Name != null)
+            {
+                user.Name = userUpdateDto.Name;
+            }
+
+            if (userUpdateDto.Nickname != null)
+            {
+                user.Nickname = userUpdateDto.Nickname;
+            }
+            
+            await _context.SaveChangesAsync();
         }
     }
 }

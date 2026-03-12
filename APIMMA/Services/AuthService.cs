@@ -1,5 +1,6 @@
 ﻿using APIMMA.Data;
-using APIMMA.Dtos;
+using APIMMA.Dtos.AuthDtos;
+using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
 using APIMMA.Models;
 using FluentValidation;

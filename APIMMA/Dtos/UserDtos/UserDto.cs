@@ -1,4 +1,4 @@
-﻿namespace APIMMA.Dtos
+﻿namespace APIMMA.Dtos.UserDtos
 {
     public class UserDto
     {
