@@ -5,5 +5,7 @@ namespace APIMMA.Services
     public interface IPostService
     {
         public Task<List<PostDto>> GetPosts(int page, int pageSize);
+
+        public Task Post(int UserId, CreatePostDto postDto);
     }
 }

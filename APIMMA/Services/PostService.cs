@@ -1,6 +1,8 @@
 ﻿using APIMMA.Data;
 using APIMMA.Dtos.PostDtos;
 using APIMMA.Dtos.UserDtos;
+using APIMMA.Exceptions;
+using APIMMA.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIMMA.Services
@@ -27,7 +29,7 @@ namespace APIMMA.Services
                 Title = post.Title,
                 Content = post.Content,
                 Created_at = post.Created_at,
-                user = new UserDto
+                user = 
                 {
                     name = post.User.Name,
                     nickname = post.User.Nickname ?? "N/A"
@@ -37,5 +39,25 @@ namespace APIMMA.Services
             return posts;
         }
 
+        public async Task Post(int UserId, CreatePostDto postDto)
+        {
+            var user = await _context.Users.FindAsync(UserId);
+
+            if (user == null)
+            {
+                throw new UserNotFoundException(UserId);
+            }
+
+            var post = new Post
+            {
+                Title = postDto.Title,
+                Content = postDto.Content,
+                Created_at = DateTime.UtcNow,
+                User_id = user.Id
+            };
+
+            _context.Posts.Add(post);
+            await _context.SaveChangesAsync();
+        }
     }
 }
