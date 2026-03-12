@@ -12,28 +12,48 @@ namespace APIMMA.Exceptions
         {
             _logger = logger;
         }
-        public ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+        public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
             _logger.LogError(exception, "Unhandled exception occurred while processing the request.");
+
+            ProblemDetails problemDetails;
 
             var status = exception switch
             {
                 NotFoundException => StatusCodes.Status404NotFound,
                 UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
                 ConflictException => StatusCodes.Status409Conflict,
-                ValidationException => StatusCodes.Status400BadRequest,
+                FluentValidation.ValidationException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
 
-            var problemDetails = new ProblemDetails
+            if (exception is FluentValidation.ValidationException validationException)
             {
-                Title = exception.Message,
-                Instance = httpContext.Request.Path
-            };
+                problemDetails = new ProblemDetails
+                {
+                    Title = exception.Message.Substring(0, 17),
+                    Instance = httpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["Errors"] = validationException.Errors.
+                        GroupBy(error => error.PropertyName)
+                        .ToDictionary(group => group.Key, group => group
+                        .Select(error => error.ErrorMessage))
+                    }
+                };
+            }
+            else
+            {
+                problemDetails = new ProblemDetails
+                {
+                    Title = exception.Message,
+                    Instance = httpContext.Request.Path
+                };
+            }
 
             httpContext.Response.StatusCode = status;
-            httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
-            return ValueTask.FromResult(true);
+            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            return await ValueTask.FromResult(true);
         }
     }
 }
