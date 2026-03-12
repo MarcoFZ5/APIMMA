@@ -31,6 +31,13 @@ namespace APIMMA.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<UserPostDto>> GetPostsByUser(int userId, int page, int pageSize)
+        {
+            var posts = await _postService.GetPostsByUser(userId, page, pageSize);
+            return Ok(posts);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] CreatePostDto postDto)
         {

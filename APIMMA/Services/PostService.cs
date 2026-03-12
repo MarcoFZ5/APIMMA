@@ -40,6 +40,32 @@ namespace APIMMA.Services
             return posts;
         }
 
+        public async Task<List<UserPostDto>> GetPostsByUser(int userId, int page, int pageSize)
+        {
+            var userExists = await _context.Users.AnyAsync(user => user.Id == userId);
+
+            if (!userExists)
+            {
+                throw new UserNotFoundException(userId);
+            }
+
+            var posts = await _context.Posts
+                .AsNoTracking()
+                .Where(post => post.User_id == userId)
+                .OrderByDescending(post => post.Created_at)
+                .Skip((page -1) * pageSize)
+                .Take(pageSize)
+                .Select(post => new UserPostDto
+                {
+                    Id = post.Id,
+                    Title = post.Title,
+                    Content = post.Content,
+                    Created_at = post.Created_at
+                }).ToListAsync();
+
+            return posts;
+        }
+
         public async Task Post(int UserId, CreatePostDto postDto)
         {
             var user = await _context.Users.FindAsync(UserId);
