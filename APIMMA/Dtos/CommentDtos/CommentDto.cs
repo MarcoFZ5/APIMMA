@@ -1,6 +1,6 @@
 ﻿using APIMMA.Dtos.UserDtos;
 
-namespace APIMMA.Dtos
+namespace APIMMA.Dtos.CommentDtos
 {
     public class CommentDto
     {

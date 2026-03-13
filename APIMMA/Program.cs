@@ -43,6 +43,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 // Add Validators to the container.
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace APIMMA.Exceptions
@@ -24,6 +25,7 @@ namespace APIMMA.Exceptions
                 UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
                 ConflictException => StatusCodes.Status409Conflict,
                 FluentValidation.ValidationException => StatusCodes.Status400BadRequest,
+                DbUpdateException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
 

@@ -1,5 +1,5 @@
 ﻿using APIMMA.Data;
-using APIMMA.Dtos;
+using APIMMA.Dtos.CommentDtos;
 using APIMMA.Dtos.PostDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;

@@ -1,4 +1,6 @@
-﻿namespace APIMMA.Dtos.PostDtos
+﻿using APIMMA.Dtos.CommentDtos;
+
+namespace APIMMA.Dtos.PostDtos
 {
     public class PostCommentsDto
     {

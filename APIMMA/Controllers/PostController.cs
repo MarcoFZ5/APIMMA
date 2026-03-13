@@ -1,4 +1,4 @@
-﻿using APIMMA.Dtos;
+﻿using APIMMA.Dtos.CommentDtos;
 using APIMMA.Dtos.PostDtos;
 using APIMMA.Extensions;
 using APIMMA.Services;
@@ -16,11 +16,13 @@ namespace APIMMA.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
+        private readonly ICommentService _commentService;
         private readonly IValidator<CreatePostDto> _createPostValidator;
 
-        public PostController(IPostService postService, IValidator<CreatePostDto> createPostValidator)
+        public PostController(IPostService postService, IValidator<CreatePostDto> createPostValidator, ICommentService commentService)
         {
             _postService = postService;
+            _commentService = commentService;
             _createPostValidator = createPostValidator;
         }
 
@@ -54,7 +56,7 @@ namespace APIMMA.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] CreatePostDto postDto)
+        public async Task<ActionResult> AddPost([FromBody] CreatePostDto postDto)
         {
             await _createPostValidator.ValidateAndThrowAsync(postDto);
 
@@ -63,6 +65,15 @@ namespace APIMMA.Controllers
             await _postService.Post(userId, postDto);
 
             return Created();
+        }
+
+        [HttpPost("{postId}/comments")]
+        public async Task<ActionResult<CommentDto>> AddComment(int postId, [FromBody] CommentPostDto commentDto)
+        {
+            int userId = User.GetUserId();
+            var createdComment = await _commentService.AddComment(postId, userId, commentDto);
+
+            return CreatedAtAction(nameof(AddComment), new { id = createdComment.Id }, createdComment);
         }
 
         [HttpPatch("{postId}")]

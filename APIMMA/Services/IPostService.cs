@@ -1,4 +1,4 @@
-﻿using APIMMA.Dtos;
+﻿using APIMMA.Dtos.CommentDtos;
 using APIMMA.Dtos.PostDtos;
 
 namespace APIMMA.Services
