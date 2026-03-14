@@ -12,7 +12,7 @@ namespace APIMMA.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
