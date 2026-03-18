@@ -1,19 +1,16 @@
 using APIMMA.Data;
-using APIMMA.Dtos;
 using APIMMA.Exceptions;
 using APIMMA.Services;
-using APIMMA.Validations;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add connection string and database context
-var _connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(
-    context => context.UseSqlServer(_connectionString));
+    context => context.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var _secretKey = builder.Configuration.GetSection("Jwt:Key").Value;
 

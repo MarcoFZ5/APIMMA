@@ -1,10 +1,10 @@
 ﻿using APIMMA.Dtos.AuthDtos;
 using APIMMA.Dtos.UserDtos;
+using APIMMA.Extensions;
 using APIMMA.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace APIMMA.Controllers
 {
@@ -41,12 +41,9 @@ namespace APIMMA.Controllers
         [HttpGet("me")]
         public async Task<ActionResult<UserDto>> Me()
         {
-            var claim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            int userId = User.GetUserId();
 
-
-            var UserId = int.Parse(claim.Value);
-
-            return await _authService.Me(UserId);
+            return await _authService.Me(userId);
         }
     }
 }
