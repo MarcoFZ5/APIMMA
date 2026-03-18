@@ -1,12 +1,18 @@
-﻿namespace APIMMA.Models
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+
+namespace APIMMA.Models
 {
     public class Comment
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Content { get; set; }
 
         public DateTime Created_at { get; set; } = DateTime.UtcNow;
+
+        public int? IsDeleted { get; set; } = 0;
+
+        public DateTime? Deleted_at { get; set; }
 
         // Navigation properties
         // One comment belongs to one post

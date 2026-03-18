@@ -1,19 +1,18 @@
-﻿namespace APIMMA.Models
+﻿using System.Numerics;
+
+namespace APIMMA.Models
 {
     public class Post
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
+        public Guid Id { get; set; }
         public string Content { get; set; }
         public DateTime Created_at { get; set; } = DateTime.UtcNow;
+        public string Type { get; set; } // MANUAL | TRAININGLOG | CHALLENGE
+        public BigInteger LikesCount { get; set; } = 0;
 
+        public Guid? ReferenceId { get; set; } // For referencing a training log or challenge if the post is of type TRAININGLOG or CHALLENGE ELSE NULL
         // Navigation properties
 
-        // One post has manny comments
-        public ICollection<Comment> Comments { get; set; }
-
-        // One post belongs to one user
-        public int User_id { get; set; }
-        public User User { get; set; }
     }
+  
 }

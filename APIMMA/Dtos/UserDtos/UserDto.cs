@@ -2,9 +2,18 @@
 {
     public class UserDto
     {
-        public string name { get; set; }
-        public string nickname { get; set; }
-        public string email { get; set; }
-        public string role { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        // Nullable Properties
+        public float? Weight { get; set; } = null;
+
+        public string? Discipline { get; set; } = null;
+
+        public string? Level { get; set; } = null;
+
+        public string? Gym { get; set; } = null;
     }
 }
