@@ -28,7 +28,7 @@ namespace APIMMA.Services
                 throw new ConflictException("Invalid email or password");
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.PasswordHash))
             {
                 throw new ConflictException("Invalid email or password");
             }
@@ -37,7 +37,7 @@ namespace APIMMA.Services
             return new JwtDto { Token = token };
         }
 
-        public async Task<string> Register(RegisterUserDto userDto)
+        public async Task<UserDto> Register(RegisterUserDto userDto)
         {
             var user = _context.Users.AnyAsync(user => user.Email == userDto.Email).Result;
 
@@ -48,21 +48,33 @@ namespace APIMMA.Services
 
             var newUser = new User
             {
-                Name = userDto.Name,
+                Username = userDto.Username,
                 Email = userDto.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
                 Role = RoleEnum.USER.ToString()
             };
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            return "User registered successfully";
+            var response = new UserDto
+            {
+                Username = newUser.Username,
+                Email = newUser.Email,
+                Role = newUser.Role,
+                CreatedAt = newUser.CreatedAt,
+                Weight = newUser.Weight ?? 0,
+                Discipline = newUser.Discipline ?? "N/A",
+                Level = newUser.Level ?? "N/A",
+                Gym = newUser.Gym ?? "N/A"
+            };
+
+            return response;
         }
 
         public async Task<UserDto> Me (int UserId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == UserId);
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id.Equals(UserId));
 
             if (user == null)
             {
@@ -71,11 +83,16 @@ namespace APIMMA.Services
 
             return new UserDto
             {
-                name = user.Name,
-                nickname = user.Nickname != null ? user.Nickname : "N/A",
-                email = user.Email,
-                role = user.Role
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                Weight = user.Weight ?? 0,
+                Discipline = user.Discipline ?? "N/A",
+                Level = user.Level ?? "N/A",
+                Gym = user.Gym ?? "N/A"
             };
         }
+
     }
 }
