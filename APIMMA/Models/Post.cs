@@ -22,6 +22,9 @@ namespace APIMMA.Models
         // One post can have many comments
         public List<Comment> Comments { get; set; }
 
+        // One post can have many likes
+        public List<Like> Likes { get; set; }
+
     }
   
 }

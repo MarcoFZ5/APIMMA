@@ -29,5 +29,9 @@
 
         // One user can have many likes
         public List<Like> Likes { get; set; }
+
+        public List<Follow> Following { get; set; } // Who i follow
+
+        public List<Follow> Followers { get; set; } // Who follows me
     }
 }
