@@ -4,7 +4,7 @@ namespace APIMMA.Services
 {
     public interface ICommentService
     {
-        public Task<CommentDto> AddComment(int postId, int userId, CommentPostDto commentDto);
+        public Task<CommentDto> AddComment(Guid postId, Guid userId, CommentPostDto commentDto);
         public Task EditComment();
         public Task DeleteComment();
     }

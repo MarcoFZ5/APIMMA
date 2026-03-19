@@ -9,6 +9,6 @@ namespace APIMMA.Services
         Task<JwtDto> Login(LoginUserDto userDto);
         Task<UserDto> Register(RegisterUserDto userDto);
 
-        Task<UserDto> Me(int UserId);
+        Task<UserDto> Me(Guid UserId);
     }
 }

@@ -7,7 +7,7 @@ namespace APIMMA.Validations
     {
         public RegisterUserDtoValidator()
         {
-            RuleFor(user => user.Name)
+            RuleFor(user => user.Username)
                 .NotEmpty();
 
             RuleFor(user => user.Email)

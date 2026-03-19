@@ -64,15 +64,15 @@ namespace APIMMA.Services
                 Role = newUser.Role,
                 CreatedAt = newUser.CreatedAt,
                 Weight = newUser.Weight ?? 0,
-                Discipline = newUser.Discipline ?? "N/A",
-                Level = newUser.Level ?? "N/A",
-                Gym = newUser.Gym ?? "N/A"
+                Discipline = newUser.Discipline,
+                Level = newUser.Level,
+                Gym = newUser.Gym 
             };
 
             return response;
         }
 
-        public async Task<UserDto> Me (int UserId)
+        public async Task<UserDto> Me (Guid UserId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(user => user.Id.Equals(UserId));
 

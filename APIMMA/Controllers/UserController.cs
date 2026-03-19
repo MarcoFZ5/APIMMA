@@ -18,9 +18,9 @@ namespace APIMMA.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<UserDto>> GetUserById(int userId)
+        public async Task<ActionResult<UserDto>> GetUserById(Guid userId)
         {
-            var user = await _userService.getUserById(userId);
+            var user = await _userService.GetUserById(userId);
             return Ok(user);
         }
 
@@ -28,7 +28,7 @@ namespace APIMMA.Controllers
         public async Task<ActionResult> UpdateProfile([FromBody] UpdateProfileDto userDto)
         {
             var userId = User.GetUserId();
-            await _userService.updateProfile(userId, userDto);
+            await _userService.UpdateProfile(userId, userDto);
             return NoContent();
         }
 

@@ -16,13 +16,13 @@ namespace APIMMA.Services
             _context = context;
         }
 
-        public async Task<CommentDto> AddComment(int postId, int userId, CommentPostDto commentDto)
+        public async Task<CommentDto> AddComment(Guid postId, Guid userId, CommentPostDto commentDto)
         {
             var comment = new Comment
             {
                 Content = commentDto.Content,
-                Post_id = postId,
-                User_id = userId,
+                PostId = postId,
+                UserId = userId,
                 Created_at = DateTime.UtcNow
             };
 
@@ -36,12 +36,10 @@ namespace APIMMA.Services
                 Id = comment.Id,
                 Content = comment.Content,
                 Created_at = comment.Created_at,
-                User = new UserDto
+                User = new UserSimplifiedDto
                 {
-                    name = user.Name,
-                    nickname = user.Nickname,
-                    email = user.Email,
-                    role = user.Role
+                    Id = user.Id,
+                    Username = user.Username
                 }
             };
         }

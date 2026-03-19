@@ -24,6 +24,9 @@ namespace APIMMA.Data
 
             // A user can follow many users and be followed by many users (self-referencing many-to-many)
             modelBuilder.Entity<Follow>()
+                    .HasKey(f => new { f.FollowerId, f.OwnerId });
+
+            modelBuilder.Entity<Follow>()
                 .HasOne(f => f.Follower)
                 .WithMany(u => u.Following)
                 .HasForeignKey(f => f.FollowerId)
@@ -57,6 +60,9 @@ namespace APIMMA.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // A like has one user but a user can have many likes
+            modelBuilder.Entity<Like>()
+                .HasKey(l => new { l.UserId, l.PostId });
+
             modelBuilder.Entity<Like>()
                 .HasOne(l => l.User)
                 .WithMany(u => u.Likes)

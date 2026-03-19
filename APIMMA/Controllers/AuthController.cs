@@ -31,7 +31,7 @@ namespace APIMMA.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<String>> Register([FromBody] RegisterUserDto userDto)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto userDto)
         {
             await _registerValidator.ValidateAndThrowAsync(userDto);
             return await _authService.Register(userDto);
@@ -41,7 +41,7 @@ namespace APIMMA.Controllers
         [HttpGet("me")]
         public async Task<ActionResult<UserDto>> Me()
         {
-            int userId = User.GetUserId();
+            Guid userId = User.GetUserId();
 
             return await _authService.Me(userId);
         }

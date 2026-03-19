@@ -15,7 +15,7 @@ namespace APIMMA.Services
             _context = context;
         }
 
-        public async Task<UserDto> getUserById(int userId)
+        public async Task<UserDto> GetUserById(Guid userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
 
@@ -37,7 +37,7 @@ namespace APIMMA.Services
             };
         }
 
-        public async Task updateProfile(int userId, UpdateProfileDto userUpdateDto)
+        public async Task UpdateProfile(Guid userId, UpdateProfileDto userUpdateDto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
 

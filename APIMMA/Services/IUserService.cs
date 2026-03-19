@@ -4,8 +4,8 @@ namespace APIMMA.Services
 {
     public interface IUserService
     {
-        public Task<UserDto> getUserById(int userId);
+        public Task<UserDto> GetUserById(Guid userId);
 
-        public Task updateProfile(int userId, UpdateProfileDto userUpdateDto);
+        public Task UpdateProfile(Guid userId, UpdateProfileDto userUpdateDto);
     }
 }

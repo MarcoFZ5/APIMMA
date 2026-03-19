@@ -7,9 +7,6 @@ namespace APIMMA.Validations
     {
         public CreatePostDtoValidator()
         {
-            RuleFor(post => post.Title)
-                .NotEmpty();
-
             RuleFor(post => post.Content)
                 .NotEmpty(); 
 
