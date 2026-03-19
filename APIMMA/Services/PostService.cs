@@ -17,6 +17,35 @@ namespace APIMMA.Services
             _context = context;
         }
 
+        // FEED
+        public async Task<List<PostDto>> GetPostsFeed(Guid currentUserId, int page, int pageSize)
+        {
+            var posts = await _context.Posts
+                .AsNoTracking()
+                .Where(p =>
+                    p.UserId == currentUserId ||
+                        _context.Follows.Any(f =>
+                             f.FollowerId == currentUserId && f.OwnerId == p.UserId)) // GET POSTS IF IM THE OWNER OR IF IM FOLLOWING THE OWNER
+                .OrderByDescending(post => post.Created_at)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(post => new PostDto
+                {
+                    Id = post.Id,
+                    Content = post.Content,
+                    Created_at = post.Created_at,
+                    User = new UserSimplifiedDto
+                    {
+                        Id = post.UserId,
+                        Username = post.userOwner.Username
+                    }
+                }
+                ).ToListAsync();
+
+            return posts;
+        }
+
+        // GET POSTS WITH PAGINATION
         public async Task<List<PostDto>> GetPosts(int page, int pageSize)
         {
             var posts = await _context.Posts
@@ -27,23 +56,22 @@ namespace APIMMA.Services
                 .Select(post => new PostDto
                 {
                     Id = post.Id,
-                    Title = post.Title,
                     Content = post.Content,
                     Created_at = post.Created_at,
-                    User = new UserDto
+                    User = new UserSimplifiedDto
                     {
-                        name = post.User.Name,
-                        nickname = post.User.Nickname ?? "N/A",
-                        role = post.User.Role,
+                        Id = post.UserId,
+                        Username = post.userOwner.Username
                     }
                 }).ToListAsync();
 
             return posts;
         }
 
-        public async Task<List<UserPostDto>> GetPostsByUser(int userId, int page, int pageSize)
+        // GET POSTS BY USER WITH PAGINATION
+        public async Task<List<UserPostDto>> GetPostsByUser(Guid userId, int page, int pageSize)
         {
-            var userExists = await _context.Users.AnyAsync(user => user.Id == userId);
+            var userExists = await _context.Users.AnyAsync(user => user.Id.Equals(userId));
 
             if (!userExists)
             {
@@ -52,37 +80,38 @@ namespace APIMMA.Services
 
             var posts = await _context.Posts
                 .AsNoTracking()
-                .Where(post => post.User_id == userId)
+                .Where(post => post.UserId.Equals(userId))
                 .OrderByDescending(post => post.Created_at)
                 .Skip((page -1) * pageSize)
                 .Take(pageSize)
                 .Select(post => new UserPostDto
                 {
                     Id = post.Id,
-                    Title = post.Title,
                     Content = post.Content,
-                    Created_at = post.Created_at
+                    Type = post.Type ?? "MANUAL",
+                    LikesCount = post.Likes.Count(), // N + 1 PROBLEM MAY OCURR
+                    Created_at = post.Created_at,
                 }).ToListAsync();
 
             return posts;
         }
 
-        public async Task<PostDto> GetPostById(int postId)
+
+        // GET POST BY ID
+        public async Task<PostDto> GetPostById(Guid postId)
         {
             var post = await _context.Posts
                 .AsNoTracking()
-                .Where(p => p.Id == postId)
+                .Where(p => p.Id.Equals(postId))
                 .Select(p => new PostDto
                 {
                     Id = p.Id,
-                    Title = p.Title,
                     Content = p.Content,
                     Created_at = p.Created_at,
-                    User = new UserDto
+                    User = new UserSimplifiedDto
                     {
-                        name = p.User.Name,
-                        nickname = p.User.Nickname ?? "N/A",
-                        role = p.User.Role,
+                        Id = p.UserId,
+                        Username = p.userOwner.Username
                     }
                 }).FirstOrDefaultAsync() 
                 ?? throw new PostNotFoundException(postId);
@@ -90,10 +119,10 @@ namespace APIMMA.Services
             return post;
         }
 
-        public async Task<List<CommentDto>> GetCommentsByPostId(int postId, int page, int pageSize)
+        public async Task<List<CommentDto>> GetCommentsByPostId(Guid postId, int page, int pageSize)
         {
 
-            var exists = await _context.Posts.AnyAsync(post => post.Id == postId);
+            var exists = await _context.Posts.AnyAsync(post => post.Id.Equals(postId));
                 
             if (!exists)
             {
@@ -102,7 +131,7 @@ namespace APIMMA.Services
 
             var comments = await _context.Comments
                 .AsNoTracking()
-                .Where(comment => comment.Post_id == postId)
+                .Where(comment => comment.Equals(postId))
                 .OrderByDescending(comment => comment.Created_at)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -111,18 +140,17 @@ namespace APIMMA.Services
                     Id = comment.Id,
                     Content = comment.Content,
                     Created_at = comment.Created_at,
-                    User = new UserDto
+                    User = new UserSimplifiedDto
                     {
-                        name = comment.User.Name,
-                        nickname = comment.User.Nickname ?? "N/A",
-                        role = comment.User.Role,
-                    }
+                        Id = comment.UserId,
+                        Username = comment.User.Username
+                    }   
                 }).ToListAsync();
 
             return comments;
         }
 
-        public async Task Post(int UserId, CreatePostDto postDto)
+        public async Task CreatePost(Guid UserId, CreatePostDto postDto)
         {
             var user = await _context.Users.FindAsync(UserId);
 
@@ -133,34 +161,31 @@ namespace APIMMA.Services
 
             var post = new Post
             {
-                Title = postDto.Title,
                 Content = postDto.Content,
                 Created_at = DateTime.UtcNow,
-                User_id = user.Id
+                UserId = UserId,
             };
 
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
         }
 
-        public async Task EditPost(int postId, int userId, PatchPostDto postDto)
+        public async Task EditPost(Guid postId, Guid userId, PatchPostDto postDto)
         {
             var post = await _context.Posts.FindAsync(postId);
             if (post == null)
             {
                 throw new PostNotFoundException(postId);
             }
-            if (post.User_id != userId)
+            if (post.UserId != userId)
             {
                 throw new UnauthorizedAccessException("You are not authorized to edit this post.");
             }
 
-            post.Title = postDto.Title ?? post.Title;
             post.Content = postDto.Content ?? post.Content;
 
             await _context.SaveChangesAsync();
         }
-
 
     }
 }

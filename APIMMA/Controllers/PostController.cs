@@ -35,21 +35,21 @@ namespace APIMMA.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<UserPostDto>> GetPostsByUser(int userId, int page, int pageSize)
+        public async Task<ActionResult<UserPostDto>> GetPostsByUser(Guid userId, int page, int pageSize)
         {
             var posts = await _postService.GetPostsByUser(userId, page, pageSize);
             return Ok(posts);
         }
 
         [HttpGet("{postId}")]
-        public async Task<ActionResult<PostDto>> GetPostById(int postId)
+        public async Task<ActionResult<PostDto>> GetPostById(Guid postId)
         {
             var post = await _postService.GetPostById(postId);
             return Ok(post);
         }
 
         [HttpGet("{postId}/comments")]
-        public async Task<ActionResult<List<CommentDto>>> GetCommentsForPost(int postId, int page, int pageSize)
+        public async Task<ActionResult<List<CommentDto>>> GetCommentsForPost(Guid postId, int page, int pageSize)
         {
             var comments = await _postService.GetCommentsByPostId(postId, page, pageSize);
             return Ok(comments);
@@ -60,26 +60,26 @@ namespace APIMMA.Controllers
         {
             await _createPostValidator.ValidateAndThrowAsync(postDto);
 
-            int userId = User.GetUserId();
+            Guid userId = User.GetUserId();
 
-            await _postService.Post(userId, postDto);
+            await _postService.CreatePost(userId, postDto);
 
             return Created();
         }
 
         [HttpPost("{postId}/comments")]
-        public async Task<ActionResult<CommentDto>> AddComment(int postId, [FromBody] CommentPostDto commentDto)
+        public async Task<ActionResult<CommentDto>> AddComment(Guid postId, [FromBody] CommentPostDto commentDto)
         {
-            int userId = User.GetUserId();
+            Guid userId = User.GetUserId();
             var createdComment = await _commentService.AddComment(postId, userId, commentDto);
 
             return CreatedAtAction(nameof(AddComment), new { id = createdComment.Id }, createdComment);
         }
 
         [HttpPatch("{postId}")]
-        public async Task<ActionResult> EditPost(int postId, [FromBody] PatchPostDto postDto)
+        public async Task<ActionResult> EditPost(Guid postId, [FromBody] PatchPostDto postDto)
         {
-            int userId = User.GetUserId();
+            Guid userId = User.GetUserId();
 
             await _postService.EditPost(userId, postId, postDto);
 

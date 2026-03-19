@@ -14,6 +14,6 @@ namespace APIMMA.Dtos.PostDtos
         public BigInteger LikesCount { get; set; }
 
         public DateTime Created_at { get; set; }
-        public UserDto? User { get; set; }
+        public UserSimplifiedDto User { get; set; }
     }
 }

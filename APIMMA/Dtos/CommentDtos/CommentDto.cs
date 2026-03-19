@@ -10,6 +10,6 @@ namespace APIMMA.Dtos.CommentDtos
 
         public DateTime Created_at { get; set; }
 
-        public UserDto User { get; set; }
+        public UserSimplifiedDto User { get; set; }
     }
 }

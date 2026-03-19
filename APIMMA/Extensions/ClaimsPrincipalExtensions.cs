@@ -5,7 +5,7 @@ namespace APIMMA.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {
-        public static int GetUserId(this ClaimsPrincipal user)
+        public static Guid GetUserId(this ClaimsPrincipal user)
         {
             var claim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
@@ -14,7 +14,9 @@ namespace APIMMA.Extensions
                 throw new UnauthorizedAccessException("User ID claim not found.");
             }
 
-            return int.Parse(claim.Value);
+
+            return Guid.Parse(claim.Value);
+      
         } 
     }
 }
