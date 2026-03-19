@@ -16,11 +16,11 @@ namespace APIMMA.Models
 
         // Navigation properties
         // One comment belongs to one post
-        public int Post_id { get; set; }
+        public Guid PostId { get; set; }
         public Post Post { get; set; }
 
         // One comment belongs to one user
-        public int User_id { get; set; }
+        public Guid UserId { get; set; }
         public User User { get; set; }
     }
 }

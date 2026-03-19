@@ -17,7 +17,7 @@ namespace APIMMA.Services
 
         public async Task<UserDto> getUserById(int userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
 
             if (user == null)
             {
@@ -26,27 +26,31 @@ namespace APIMMA.Services
 
             return new UserDto
             {
-                name = user.Name,
-                nickname = user.Nickname != null ? user.Nickname : "N/A",
-                email = user.Email,
-                role = user.Role
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                Weight = user.Weight ?? 0,
+                Discipline = user.Discipline ?? "N/A",
+                Level = user.Level ?? "N/A",
+                Gym = user.Gym ?? "N/A"
             };
         }
 
         public async Task updateProfile(int userId, UpdateProfileDto userUpdateDto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
 
-            if (userUpdateDto.Name != null)
-            {
-                user.Name = userUpdateDto.Name;
-            }
+            user.Username = userUpdateDto.Username ?? user.Username;
 
-            if (userUpdateDto.Nickname != null)
-            {
-                user.Nickname = userUpdateDto.Nickname;
-            }
-            
+            user.Weight = userUpdateDto.Weight ?? user.Weight;
+
+            user.Discipline = userUpdateDto.Discipline ?? user.Discipline;
+
+            user.Level = userUpdateDto.Level ?? user.Level;
+
+            user.Gym = userUpdateDto.Gym ?? user.Gym;
+
             await _context.SaveChangesAsync();
         }
     }

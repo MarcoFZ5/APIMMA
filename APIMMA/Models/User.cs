@@ -21,6 +21,13 @@
 
 
         // Navigation properties
-        
+        // One user can have many posts
+        public List<Post> Posts { get; set; }
+
+        // One user can have many comments
+        public List<Comment> Comments { get; set; }
+
+        // One user can have many likes
+        public List<Like> Likes { get; set; }
     }
 }

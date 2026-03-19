@@ -2,7 +2,14 @@
 {
     public class UpdateProfileDto
     {
-        public string? Name { get; set; }
-        public string? Nickname { get; set; }
+        public string? Username { get; set; }
+
+        public float? Weight { get; set; }
+
+        public string? Discipline { get; set; }
+
+        public string? Level { get; set; }
+
+        public string? Gym { get; set; }
     }
 }
