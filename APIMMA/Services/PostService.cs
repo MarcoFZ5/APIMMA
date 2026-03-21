@@ -26,14 +26,14 @@ namespace APIMMA.Services
                     p.UserId == currentUserId ||
                         _context.Follows.Any(f =>
                              f.FollowerId == currentUserId && f.OwnerId == p.UserId)) // GET POSTS IF IM THE OWNER OR IF IM FOLLOWING THE OWNER
-                .OrderByDescending(post => post.Created_at)
+                .OrderByDescending(post => post.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(post => new PostDto
                 {
                     Id = post.Id,
                     Content = post.Content,
-                    Created_at = post.Created_at,
+                    Created_at = post.CreatedAt,
                     User = new UserSimplifiedDto
                     {
                         Id = post.UserId,
@@ -50,14 +50,16 @@ namespace APIMMA.Services
         {
             var posts = await _context.Posts
                 .AsNoTracking()
-                .OrderByDescending(post => post.Created_at)
+                .OrderByDescending(post => post.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(post => new PostDto
                 {
                     Id = post.Id,
                     Content = post.Content,
-                    Created_at = post.Created_at,
+                    Type = post.Type,
+                    Created_at = post.CreatedAt,
+                    LikesCount = post.LikesCount,
                     User = new UserSimplifiedDto
                     {
                         Id = post.UserId,
@@ -81,16 +83,16 @@ namespace APIMMA.Services
             var posts = await _context.Posts
                 .AsNoTracking()
                 .Where(post => post.UserId.Equals(userId))
-                .OrderByDescending(post => post.Created_at)
+                .OrderByDescending(post => post.CreatedAt)
                 .Skip((page -1) * pageSize)
                 .Take(pageSize)
                 .Select(post => new UserPostDto
                 {
                     Id = post.Id,
                     Content = post.Content,
-                    Type = post.Type ?? "MANUAL",
-                    LikesCount = post.Likes.Count(), // N + 1 PROBLEM MAY OCURR
-                    Created_at = post.Created_at,
+                    Type = post.Type,
+                    LikesCount = post.LikesCount,
+                    Created_at = post.CreatedAt,
                 }).ToListAsync();
 
             return posts;
@@ -107,7 +109,9 @@ namespace APIMMA.Services
                 {
                     Id = p.Id,
                     Content = p.Content,
-                    Created_at = p.Created_at,
+                    Created_at = p.CreatedAt,
+                    Type = p.Type,
+                    LikesCount = p.LikesCount,
                     User = new UserSimplifiedDto
                     {
                         Id = p.UserId,
@@ -131,15 +135,15 @@ namespace APIMMA.Services
 
             var comments = await _context.Comments
                 .AsNoTracking()
-                .Where(comment => comment.Equals(postId))
-                .OrderByDescending(comment => comment.Created_at)
+                .Where(comment => comment.PostId.Equals(postId))
+                .OrderByDescending(comment => comment.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(comment => new CommentDto
                 {
                     Id = comment.Id,
                     Content = comment.Content,
-                    Created_at = comment.Created_at,
+                    CreatedAt = comment.CreatedAt,
                     User = new UserSimplifiedDto
                     {
                         Id = comment.UserId,
@@ -150,7 +154,7 @@ namespace APIMMA.Services
             return comments;
         }
 
-        public async Task CreatePost(Guid UserId, CreatePostDto postDto)
+        public async Task CreatePost(string Type, Guid UserId, CreatePostDto postDto)
         {
             var user = await _context.Users.FindAsync(UserId);
 
@@ -162,7 +166,8 @@ namespace APIMMA.Services
             var post = new Post
             {
                 Content = postDto.Content,
-                Created_at = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                Type = Type,
                 UserId = UserId,
             };
 
@@ -172,6 +177,9 @@ namespace APIMMA.Services
 
         public async Task EditPost(Guid postId, Guid userId, PatchPostDto postDto)
         {
+            System.Console.WriteLine($"Editing post with ID: {postId} by user: {userId}");
+            System.Console.WriteLine($"Type of the postId: {postId.GetType()}");
+
             var post = await _context.Posts.FindAsync(postId);
             if (post == null)
             {

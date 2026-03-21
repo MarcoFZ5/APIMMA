@@ -23,7 +23,7 @@ namespace APIMMA.Services
                 Content = commentDto.Content,
                 PostId = postId,
                 UserId = userId,
-                Created_at = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
 
             _context.Comments.Add(comment);
@@ -35,7 +35,7 @@ namespace APIMMA.Services
             {
                 Id = comment.Id,
                 Content = comment.Content,
-                Created_at = comment.Created_at,
+                CreatedAt = comment.CreatedAt,
                 User = new UserSimplifiedDto
                 {
                     Id = user.Id,

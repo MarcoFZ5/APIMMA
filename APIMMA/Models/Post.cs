@@ -6,7 +6,7 @@ namespace APIMMA.Models
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
-        public DateTime Created_at { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string Type { get; set; } // MANUAL | TRAININGLOG | CHALLENGE
         public long LikesCount { get; set; } = 0;
 

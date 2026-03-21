@@ -56,13 +56,13 @@ namespace APIMMA.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddPost([FromBody] CreatePostDto postDto)
+        public async Task<ActionResult> CreatePost([FromBody] CreatePostDto postDto)
         {
             await _createPostValidator.ValidateAndThrowAsync(postDto);
 
             Guid userId = User.GetUserId();
 
-            await _postService.CreatePost(userId, postDto);
+            await _postService.CreatePost("Manual", userId, postDto);
 
             return Created();
         }
@@ -81,7 +81,7 @@ namespace APIMMA.Controllers
         {
             Guid userId = User.GetUserId();
 
-            await _postService.EditPost(userId, postId, postDto);
+            await _postService.EditPost(postId, userId, postDto);
 
             return NoContent();
         }

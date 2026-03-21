@@ -8,11 +8,11 @@ namespace APIMMA.Models
 
         public string Content { get; set; }
 
-        public DateTime Created_at { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public int? IsDeleted { get; set; } = 0;
 
-        public DateTime? Deleted_at { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         // Navigation properties
         // One comment belongs to one post
