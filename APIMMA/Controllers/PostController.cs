@@ -1,5 +1,7 @@
 ﻿using APIMMA.Dtos.CommentDtos;
+using APIMMA.Dtos.LikeDtos;
 using APIMMA.Dtos.PostDtos;
+using APIMMA.Dtos.UserDtos;
 using APIMMA.Extensions;
 using APIMMA.Services;
 using FluentValidation;
@@ -17,13 +19,15 @@ namespace APIMMA.Controllers
     {
         private readonly IPostService _postService;
         private readonly ICommentService _commentService;
+        private readonly ILikeService _likeService;
         private readonly IValidator<CreatePostDto> _createPostValidator;
 
-        public PostController(IPostService postService, IValidator<CreatePostDto> createPostValidator, ICommentService commentService)
+        public PostController(IPostService postService, IValidator<CreatePostDto> createPostValidator, ICommentService commentService, ILikeService likeService )
         {
             _postService = postService;
             _commentService = commentService;
             _createPostValidator = createPostValidator;
+            _likeService = likeService;
         }
 
         [HttpGet]
@@ -32,6 +36,13 @@ namespace APIMMA.Controllers
             var posts = await _postService.GetPosts(page, pageSize);
 
             return Ok(posts);
+        }
+
+        [HttpGet("{postId}/likes")]
+        public async Task<ActionResult<ICollection<UserSimplifiedDto>>> GetUsersWhoLiked(Guid postId, int page, int pageSize)
+        {
+            var users = await _likeService.GetUsersWhoLiked(postId, page, pageSize);
+            return Ok(users);
         }
 
         [HttpGet("user/{userId}")]
