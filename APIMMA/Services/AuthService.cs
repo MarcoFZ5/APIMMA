@@ -4,6 +4,7 @@ using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
 using APIMMA.Models;
 using FluentValidation;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIMMA.Services
@@ -12,11 +13,13 @@ namespace APIMMA.Services
     {
         private readonly AppDbContext _context;
         private readonly IJwtService _jwtService;
+        private readonly IBackgroundJobs _jobs;
 
-        public AuthService(AppDbContext context, IValidator<RegisterUserDto> validator, IJwtService jwtService)
+        public AuthService(AppDbContext context, IValidator<RegisterUserDto> validator, IJwtService jwtService, IBackgroundJobs jobs)
         {
             _context = context;
             _jwtService = jwtService;
+            _jobs = jobs;
         }
 
         public async Task<JwtDto> Login (LoginUserDto userDto)
@@ -39,7 +42,7 @@ namespace APIMMA.Services
 
         public async Task<UserDto> Register(RegisterUserDto userDto)
         {
-            var user = _context.Users.AnyAsync(user => user.Email == userDto.Email).Result;
+            var user = await _context.Users.AnyAsync(user => user.Email == userDto.Email);
 
             if (user)
             {
@@ -68,6 +71,9 @@ namespace APIMMA.Services
                 Level = newUser.Level,
                 Gym = newUser.Gym 
             };
+
+            // inject the background job to send a confirmation email after registration
+            BackgroundJob.Enqueue<IBackgroundJobs>(jobs => jobs.sendEmail("marco@gmail.com", "confirmation email", "Confirm the email"));
 
             return response;
         }

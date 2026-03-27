@@ -1,7 +1,9 @@
+using APIMMA.BackgroundJobs.Emails;
 using APIMMA.Data;
 using APIMMA.Exceptions;
 using APIMMA.Services;
 using FluentValidation;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -40,6 +42,10 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Configure hangfire with SQL Server storage
+builder.Services.AddHangfire(options => options.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
+
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -52,6 +58,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
+
+
+// Background Jobs services
+builder.Services.AddScoped<IEmailJobs, EmailJobs>();
 
 // Add Validators to the container.
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -72,6 +82,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
+
+// Configure Hangfire Dashboard (optional, for monitoring background jobs)
+app.UseHangfireDashboard();
 
 app.UseExceptionHandler();
 
