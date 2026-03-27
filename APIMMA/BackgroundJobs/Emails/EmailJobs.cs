@@ -1,15 +1,14 @@
-﻿
-using APIMMA.Data;
+﻿using APIMMA.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace APIMMA.Services
+namespace APIMMA.BackgroundJobs.Emails
 {
-    public class BakgroundJobs : IBackgroundJobs
+    public class EmailJobs : IEmailJobs
     {
         public readonly ILogger _logger;
         public AppDbContext _context;
         
-        public BakgroundJobs(ILogger<BakgroundJobs> logger, AppDbContext context)
+        public EmailJobs(ILogger<EmailJobs> logger, AppDbContext context)
         {
             _logger = logger;
             _context = context;

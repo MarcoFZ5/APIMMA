@@ -1,6 +1,6 @@
-﻿namespace APIMMA.Services
+﻿namespace APIMMA.BackgroundJobs.Emails
 {
-    public interface IBackgroundJobs
+    public interface IEmailJobs
     {
         public Task sendEmail(string to, string subject, string body);
     }

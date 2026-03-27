@@ -1,4 +1,5 @@
-﻿using APIMMA.Data;
+﻿using APIMMA.BackgroundJobs.Emails;
+using APIMMA.Data;
 using APIMMA.Dtos.AuthDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
@@ -13,9 +14,9 @@ namespace APIMMA.Services
     {
         private readonly AppDbContext _context;
         private readonly IJwtService _jwtService;
-        private readonly IBackgroundJobs _jobs;
+        private readonly IEmailJobs _jobs;
 
-        public AuthService(AppDbContext context, IValidator<RegisterUserDto> validator, IJwtService jwtService, IBackgroundJobs jobs)
+        public AuthService(AppDbContext context, IValidator<RegisterUserDto> validator, IJwtService jwtService, IEmailJobs jobs)
         {
             _context = context;
             _jwtService = jwtService;
@@ -73,7 +74,7 @@ namespace APIMMA.Services
             };
 
             // inject the background job to send a confirmation email after registration
-            BackgroundJob.Enqueue<IBackgroundJobs>(jobs => jobs.sendEmail("marco@gmail.com", "confirmation email", "Confirm the email"));
+            BackgroundJob.Enqueue<IEmailJobs>(jobs => jobs.sendEmail("marco@gmail.com", "confirmation email", "Confirm the email"));
 
             return response;
         }
