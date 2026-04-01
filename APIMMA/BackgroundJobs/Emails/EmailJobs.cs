@@ -1,31 +1,26 @@
 ﻿using APIMMA.Data;
+using APIMMA.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIMMA.BackgroundJobs.Emails
 {
     public class EmailJobs : IEmailJobs
     {
-        public readonly ILogger _logger;
-        public AppDbContext _context;
-        
-        public EmailJobs(ILogger<EmailJobs> logger, AppDbContext context)
+        private readonly IEmailService _email;
+
+        public EmailJobs(IEmailService email)
         {
-            _logger = logger;
-            _context = context;
+            _email = email;
         }
 
-        public async Task sendEmail(string to, string subject, string body)
+        public async Task sendConfirmationEmail(string to)
         {
-            var exists = await _context.Users.AnyAsync(user => user.Email == to);
+            var message = $"Confirmation Email for the MMA COMMUNITY APP";
+            var subject = "MMA COMMUNITY APP - Confirmation Email";
 
-            if (exists)
-            {
-                _logger.LogInformation($"Email sent to {to} with subject: {subject} and body: {body}");
-            }
-            else
-            {
-                _logger.LogError("Failed to send email. User with email {to} does not exist.", to);
-            }
+            var htmlContext = $"<p> {message} </p>";
+
+            await _email.SendEmailAsync(to, subject, message, htmlContext);
         }
     }
 }

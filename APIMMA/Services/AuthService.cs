@@ -74,7 +74,7 @@ namespace APIMMA.Services
             };
 
             // inject the background job to send a confirmation email after registration
-            BackgroundJob.Enqueue<IEmailJobs>(jobs => jobs.sendEmail("marco@gmail.com", "confirmation email", "Confirm the email"));
+            BackgroundJob.Enqueue<IEmailJobs>(jobs => jobs.sendConfirmationEmail(response.Email));
 
             return response;
         }

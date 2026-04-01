@@ -1,6 +1,7 @@
 using APIMMA.BackgroundJobs.Emails;
 using APIMMA.Data;
 using APIMMA.Exceptions;
+using APIMMA.Factories;
 using APIMMA.Services;
 using FluentValidation;
 using Hangfire;
@@ -59,9 +60,13 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Background Jobs services
 builder.Services.AddScoped<IEmailJobs, EmailJobs>();
+
+// Factories
+builder.Services.AddSingleton<SendGridFactory>();
 
 // Add Validators to the container.
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();

@@ -2,6 +2,6 @@
 {
     public interface IEmailJobs
     {
-        public Task sendEmail(string to, string subject, string body);
+        public Task sendConfirmationEmail(string to);
     }
 }
