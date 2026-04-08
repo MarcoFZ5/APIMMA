@@ -17,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(
 
 var _secretKey = builder.Configuration.GetSection("Jwt:Key").Value;
 
+// JWT Authentication configuration
 builder.Services.AddAuthentication().AddJwtBearer("Bearer", auth => {
 
     auth.TokenValidationParameters = new TokenValidationParameters
@@ -33,6 +34,8 @@ builder.Services.AddAuthentication().AddJwtBearer("Bearer", auth => {
     }
 );
 
+
+// Cross-Origin Resource Sharing (CORS) configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -47,8 +50,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddHangfire(options => options.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddHangfireServer();
 
+// Configure strongly typed settings objects
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
+// Add global exception handler and problem details middleware
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 

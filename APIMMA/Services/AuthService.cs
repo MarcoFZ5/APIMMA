@@ -43,12 +43,12 @@ namespace APIMMA.Services
 
         public async Task<UserDto> Register(RegisterUserDto userDto)
         {
-            var user = await _context.Users.AnyAsync(user => user.Email == userDto.Email);
-
-            if (user)
-            {
-                throw new EmailAlreadyExistsException(userDto.Email);
-            }
+            var emailExists = await _context.Users.AnyAsync(user => user.Email == userDto.Email);
+            var usernameExists = await _context.Users.AnyAsync(user => user.Username == userDto.Username);
+    
+            if (emailExists) throw new EmailAlreadyExistsException(userDto.Email);
+            
+            if (usernameExists) throw new UsernameAlreadyExistsException(userDto.Username);
 
             var newUser = new User
             {
