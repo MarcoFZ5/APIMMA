@@ -1,10 +1,10 @@
-﻿
-using APIMMA.Exceptions;
+﻿using APIMMA.Exceptions;
 using APIMMA.Factories;
+using APIMMA.Services.Interfaces;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Implementations
 {
     public class EmailService : IEmailService
     {

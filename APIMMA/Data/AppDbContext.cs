@@ -15,6 +15,12 @@ namespace APIMMA.Data
         public DbSet<Like> Likes { get; set; }
         public DbSet<Follow> Follows { get; set; }
 
+        public DbSet<Challenge> Challenges { get; set; }
+
+        public DbSet<ChallengeParticipant> ChallengeParticipants { get; set; }
+
+        public DbSet<TrainingLog> TrainingLogs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<"Entity">()
@@ -76,7 +82,20 @@ namespace APIMMA.Data
                 .HasForeignKey(l => l.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ChallengeParticipant>()
+                .HasOne(cp => cp.UserParticipant)
+                .WithMany(u => u.ChallengeParticipations)
+                .HasForeignKey(cp => cp.UserId);
 
+            modelBuilder.Entity<ChallengeParticipant>()
+                .HasOne(cp => cp.Challenge)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(cp => cp.ChallengeId);
+
+            modelBuilder.Entity<TrainingLog>()
+                .HasOne(tl => tl.User)
+                .WithMany(u => u.TrainingLogs)
+                .HasForeignKey(tl => tl.UserId);
         }
     }  
 }

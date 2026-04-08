@@ -1,7 +1,7 @@
 ﻿using APIMMA.Dtos.LikeDtos;
 using APIMMA.Dtos.UserDtos;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Interfaces
 {
     public interface ILikeService
     {

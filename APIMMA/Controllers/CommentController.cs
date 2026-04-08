@@ -1,6 +1,6 @@
 ﻿using APIMMA.Dtos.CommentDtos;
 using APIMMA.Extensions;
-using APIMMA.Services;
+using APIMMA.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

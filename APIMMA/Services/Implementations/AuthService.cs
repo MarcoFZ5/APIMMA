@@ -4,11 +4,14 @@ using APIMMA.Dtos.AuthDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
 using APIMMA.Models;
+using APIMMA.Services.Interfaces;
 using FluentValidation;
 using Hangfire;
+using Mapster;
+using Mapster.Utils;
 using Microsoft.EntityFrameworkCore;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Implementations
 {
     public class AuthService : IAuthService
     {
@@ -61,17 +64,7 @@ namespace APIMMA.Services
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            var response = new UserDto
-            {
-                Username = newUser.Username,
-                Email = newUser.Email,
-                Role = newUser.Role,
-                CreatedAt = newUser.CreatedAt,
-                Weight = newUser.Weight ?? 0,
-                Discipline = newUser.Discipline,
-                Level = newUser.Level,
-                Gym = newUser.Gym 
-            };
+            var response = newUser.Adapt<UserDto>();
 
             // inject the background job to send a confirmation email after registration
             BackgroundJob.Enqueue<IEmailJobs>(jobs => jobs.sendConfirmationEmail(response.Email));

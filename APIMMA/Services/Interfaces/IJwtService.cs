@@ -1,6 +1,6 @@
 ﻿using APIMMA.Models;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Interfaces
 {
     public interface IJwtService
     {

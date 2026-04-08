@@ -33,5 +33,12 @@
         public List<Follow> Following { get; set; } // Who i follow
 
         public List<Follow> Followers { get; set; } // Who follows me
+
+        // One user can participate in many challenges
+        public List<ChallengeParticipant> ChallengeParticipations { get; set; }
+
+        // One user can have many training logs
+
+        public List<TrainingLog> TrainingLogs { get; set; }
     }
 }

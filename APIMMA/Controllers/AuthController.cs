@@ -1,7 +1,7 @@
 ﻿using APIMMA.Dtos.AuthDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Extensions;
-using APIMMA.Services;
+using APIMMA.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

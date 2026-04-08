@@ -1,11 +1,12 @@
 ﻿using APIMMA.Data;
 using APIMMA.Models;
+using APIMMA.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Implementations
 {
     public class JwtService : IJwtService
     {

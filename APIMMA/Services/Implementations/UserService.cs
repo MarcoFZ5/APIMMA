@@ -1,10 +1,11 @@
 ﻿using APIMMA.Data;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
+using APIMMA.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Implementations
 {
     public class UserService : IUserService
     {

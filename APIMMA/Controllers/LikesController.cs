@@ -1,6 +1,6 @@
 ﻿using APIMMA.Dtos.LikeDtos;
 using APIMMA.Extensions;
-using APIMMA.Services;
+using APIMMA.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

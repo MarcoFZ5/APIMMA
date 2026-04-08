@@ -1,6 +1,6 @@
 ﻿using APIMMA.Dtos.UserDtos;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Interfaces
 {
     public interface IUserService
     {

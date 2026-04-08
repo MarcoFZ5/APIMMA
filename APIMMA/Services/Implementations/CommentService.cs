@@ -1,12 +1,12 @@
-﻿
-using APIMMA.Data;
+﻿using APIMMA.Data;
 using APIMMA.Dtos.CommentDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
 using APIMMA.Models;
+using APIMMA.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Implementations
 {
     public class CommentService : ICommentService
     {
@@ -44,9 +44,16 @@ namespace APIMMA.Services
             };
         }
 
-        public Task DeleteComment()
+        public async Task DeleteComment(Guid userId, Guid commentId)
         {
-            throw new NotImplementedException();
+            var comment = await _context.Comments.FindAsync(commentId);
+
+            if (comment == null) throw new NotFoundException($"Comment {commentId} not found");
+
+            if (comment.UserId != userId) throw new UnauthorizedAccessException("You can only delete your own comments");
+
+            comment.IsDeleted = 1;
+            comment.DeletedAt = DateTime.UtcNow;
         }
 
         public Task EditComment()

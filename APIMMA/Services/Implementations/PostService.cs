@@ -4,9 +4,10 @@ using APIMMA.Dtos.PostDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
 using APIMMA.Models;
+using APIMMA.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Implementations
 {
     public class PostService : IPostService
     {
@@ -22,10 +23,8 @@ namespace APIMMA.Services
         {
             var posts = await _context.Posts
                 .AsNoTracking()
-                .Where(p =>
-                    p.UserId == currentUserId ||
-                        _context.Follows.Any(f =>
-                             f.FollowerId == currentUserId && f.OwnerId == p.UserId)) // GET POSTS IF IM THE OWNER OR IF IM FOLLOWING THE OWNER
+                .Where(p => p.UserId == currentUserId ||
+                        _context.Follows.Any(f => f.FollowerId == currentUserId && f.OwnerId == p.UserId)) // GET POSTS IF IM THE OWNER OR IF IM FOLLOWING THE OWNER
                 .OrderByDescending(post => post.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -177,8 +176,8 @@ namespace APIMMA.Services
 
         public async Task EditPost(Guid postId, Guid userId, PatchPostDto postDto)
         {
-            System.Console.WriteLine($"Editing post with ID: {postId} by user: {userId}");
-            System.Console.WriteLine($"Type of the postId: {postId.GetType()}");
+            Console.WriteLine($"Editing post with ID: {postId} by user: {userId}");
+            Console.WriteLine($"Type of the postId: {postId.GetType()}");
 
             var post = await _context.Posts.FindAsync(postId);
             if (post == null)

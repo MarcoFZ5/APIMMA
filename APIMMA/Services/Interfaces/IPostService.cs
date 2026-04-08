@@ -1,7 +1,7 @@
 ﻿using APIMMA.Dtos.CommentDtos;
 using APIMMA.Dtos.PostDtos;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Interfaces
 {
     public interface IPostService
     {

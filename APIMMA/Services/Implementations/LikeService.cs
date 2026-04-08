@@ -1,11 +1,11 @@
-﻿
-using APIMMA.Data;
+﻿using APIMMA.Data;
 using APIMMA.Dtos.LikeDtos;
 using APIMMA.Dtos.UserDtos;
 using APIMMA.Exceptions;
+using APIMMA.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace APIMMA.Services
+namespace APIMMA.Services.Implementations
 {
     public class LikeService : ILikeService
     {

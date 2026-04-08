@@ -1,5 +1,5 @@
 ﻿using APIMMA.Data;
-using APIMMA.Services;
+using APIMMA.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIMMA.BackgroundJobs.Emails
