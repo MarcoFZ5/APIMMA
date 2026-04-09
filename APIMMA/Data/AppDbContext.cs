@@ -16,9 +16,7 @@ namespace APIMMA.Data
         public DbSet<Follow> Follows { get; set; }
 
         public DbSet<Challenge> Challenges { get; set; }
-
         public DbSet<ChallengeParticipant> ChallengeParticipants { get; set; }
-
         public DbSet<TrainingLog> TrainingLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
